@@ -143,6 +143,12 @@ static int processTask(HttpClient* client, HttpRequest* request, NSString* reque
     
     //create request with url
     NSString* urlstring = [NSString stringWithUTF8String:request->getUrl()];
+#ifdef NSFoundationVersionNumber_iOS_8_0
+    urlstring = [urlstring stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#else
+    urlstring = [urlstring stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"#%^{}\"[]|\\<> "].invertedSet];
+#endif
+ 
     NSURL *url = [NSURL URLWithString:urlstring];
 
     NSMutableURLRequest *nsrequest = [NSMutableURLRequest requestWithURL:url
